@@ -1,0 +1,37 @@
+#!/usr/bin/env ruby
+
+LINES_PER_CARD = 20
+CHARS_PER_LINE = 40
+
+new_cards = []
+
+File.read("bens_deck_api_response.txt").split("\n\n") do |card|
+  card_lines = card.split("\n")
+  card_title = card_lines[0]
+  card_body = card_lines[1..-1]
+  new_card_body = ""
+  card_body.each do |line|
+    words = line.split(" ")
+    while words.length > 0
+      new_line = ""
+      while "#{new_line} #{words[0]}".length < CHARS_PER_LINE
+        new_line << "#{words[0]} "
+        words = words[1..-1] || []
+      end
+      new_card_body << "#{new_line}\n"
+    end
+    new_card_body << "\n"
+  end
+
+  new_lines_for_art = LINES_PER_CARD - new_card_body.count("\n") - 1
+  new_card = card_title
+  new_lines_for_art.times do
+    new_card << "\n"
+  end
+  new_card << new_card_body
+  new_cards << new_card
+end
+
+new_cards.each do |card|
+  puts card
+end
