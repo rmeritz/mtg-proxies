@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+require 'net/http'
+
+File.foreach("/home/rebecca/Downloads/bens_deck.csv") do |line|
+  scryfall_id = line.split(',')[-1]
+  uri = URI("https://api.scryfall.com/cards/#{scryfall_id.chomp}?format=text&pretty=true")
+  response = Net::HTTP.get(uri)
+  puts response
+
+  File.write("bens_deck_api_response.txt", response, mode: "a")
+  File.write("bens_deck_api_response.txt", "\n\n", mode: "a")
+end
